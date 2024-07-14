@@ -112,7 +112,7 @@ inline SSList<DataType>::~SSList() {
         root_->Destroy();
     }
     else {
-        delete root_;
+        delete root_;    
     }
 }
 

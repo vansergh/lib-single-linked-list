@@ -22,11 +22,18 @@ int main() {
     if (!stack.IsEmpty()) {
         std::cout << "> Not Empty" << std::endl;
     }
-    std::cout << "> Size:" << stack.Size() << std::endl;
+    std::cout << "> Size: " << stack.Size() << std::endl;
     Print(stack.Top());
     stack.Pop();
     Print(stack.Top());
     stack.Push(79);
-    Print(stack.Top()); 
+    Print(stack.Top());
+    std::cout << "> Size: " << stack.Size() << std::endl;
+    stack.Pop();
+    stack.Pop();
+    stack.Pop();
+    stack.Pop();
+    stack.Pop(); // <= stack is empty, trying to Pop
+    std::cout << "> Size: " << stack.Size() << std::endl;
     return 0;
 }
