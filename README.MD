@@ -39,7 +39,6 @@
 > Size: 0
 > Empty: Yes
 ==============================
-
 > FromBack:
 > Back: 0
 > Size: 0

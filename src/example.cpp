@@ -63,7 +63,6 @@ void TestSLList() {
         from_back_first = false;
         std::cout << node->data;
         };    
-    std::cout << std::endl;
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
     std::cout << std::endl;
