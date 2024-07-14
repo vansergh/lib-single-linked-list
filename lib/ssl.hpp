@@ -124,7 +124,7 @@ inline void SSList<DataType>::Push(const DataType& data) {
 
 template<class DataType>
 inline void SSList<DataType>::Pop() {
-    if (size_ > 0) {
+    if (!IsEmpty()) {
         root_ = root_->Pop();
         --size_;
     }
