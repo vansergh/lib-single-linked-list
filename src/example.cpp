@@ -1,25 +1,32 @@
 #include <iostream>
 #include "../lib/ssl.hpp"
 
-void Print(SingleLinkedList<int>*& stack) {
-    std::cout << "==============================\n";
-    std::cout << stack->data << std::endl;      
+void Print(int value) {
+    std::cout << "> " << value << std::endl;
 }
 
 int main() {
-    SingleLinkedList<int>* stack = new SingleLinkedList<int>(7, nullptr);
-    stack = stack->Push(9);
-    Print(stack);
-    stack = stack->Push(19);
-    Print(stack);
-    stack = stack->Push(59);
-    Print(stack);
-    stack = stack->Push(12);
-    Print(stack);
-    stack = stack->Pop();
-    Print(stack);
-    stack = stack->Push(17);
-    Print(stack);
-    stack->Destroy();
+    std::cout << "==============================\n";
+    SSList<int> stack;
+    if (stack.IsEmpty()) {
+        std::cout << "> Empty" << std::endl;
+    }
+    stack.Push(9);
+    Print(stack.Top());
+    stack.Push(19);
+    Print(stack.Top());
+    stack.Push(39);
+    Print(stack.Top());
+    stack.Push(19);
+    Print(stack.Top());
+    if (!stack.IsEmpty()) {
+        std::cout << "> Not Empty" << std::endl;
+    }
+    std::cout << "> Size:" << stack.Size() << std::endl;
+    Print(stack.Top());
+    stack.Pop();
+    Print(stack.Top());
+    stack.Push(79);
+    Print(stack.Top()); 
     return 0;
 }
