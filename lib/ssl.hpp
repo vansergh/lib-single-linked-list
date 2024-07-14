@@ -6,8 +6,9 @@
 //////////////////////////////////  
 
 template <class DataType>
-struct SingleLinkedList {
-
+class SingleLinkedList {
+public:
+    
     SingleLinkedList() = delete;
     SingleLinkedList(const SingleLinkedList<DataType>&) = delete;
     SingleLinkedList(const DataType& in_data, SingleLinkedList<DataType>* in_prev);
@@ -15,8 +16,11 @@ struct SingleLinkedList {
 
     SingleLinkedList<DataType>* Push(const DataType& in_data);
     SingleLinkedList<DataType>* Pop();
+    DataType Top();
+    bool IsEmpty();
     void Destroy();
 
+private:
     DataType data;
     SingleLinkedList* prev{ nullptr };
 };
@@ -48,6 +52,16 @@ inline SingleLinkedList<DataType>* SingleLinkedList<DataType>::Pop() {
     SingleLinkedList<DataType>* res = prev;
     delete this;
     return res;
+}
+
+template<class DataType>
+inline DataType SingleLinkedList<DataType>::Top() {
+    return data;
+}
+
+template<class DataType>
+inline bool SingleLinkedList<DataType>::IsEmpty() {
+    return prev == nullptr;
 }
 
 template<class DataType>
