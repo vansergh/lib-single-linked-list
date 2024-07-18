@@ -34,6 +34,7 @@ private:
 
     NodePtr back_{ nullptr };
     size_t size_{ 0 };
+    DataType temp_value_;
 
 public:
 
@@ -120,7 +121,7 @@ inline void SLList<DataType>::PopBack() {
 
 template<typename DataType>
 inline DataType& SLList<DataType>::Back() {
-    return back_->data;
+    return IsEmpty() ? temp_value_ : back_->data;
 }
 
 template<typename DataType>
