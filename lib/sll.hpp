@@ -46,7 +46,7 @@ public:
     void Clear();
     void PushBack(DataType&& data);
     void PopBack();
-    DataType& Back() const;
+    DataType& Back();
     template <typename OperationFnc>
     void FromBack(OperationFnc& operation_fnc);
     bool IsEmpty() const;
@@ -119,7 +119,7 @@ inline void SLList<DataType>::PopBack() {
 }
 
 template<typename DataType>
-inline DataType& SLList<DataType>::Back() const {
+inline DataType& SLList<DataType>::Back() {
     return back_->data;
 }
 
