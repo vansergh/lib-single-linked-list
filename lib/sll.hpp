@@ -20,12 +20,13 @@ private:
         friend SLList;
         SLLNode(const SLLNode&) = delete;
         SLLNode(SLLNode&&) = delete;
+        SLLNode() = delete;
 
-        SLLNode();
+        SLLNode(DataType&& in_data, SLLNode* in_prev);
 
         DataType data;
         SLLNode* prev;
-    };    
+    };
 
     typedef SLLNode Node;
     typedef Node* NodePtr;
@@ -38,7 +39,7 @@ public:
 
     SLList(const SLList&) = delete;
     SLList(SLList&&) = delete;
-    
+
     SLList();
     ~SLList();
 
@@ -59,15 +60,16 @@ public:
 //////////////////////////////////  
 
 template<typename DataType>
-inline DataType& SLList<DataType>::SLLNode::GetData(){
+inline DataType& SLList<DataType>::SLLNode::GetData() {
     return data;
 }
 
 template<typename DataType>
-inline SLList<DataType>::SLLNode::SLLNode() :
-    prev{ nullptr }    
+inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::SLLNode* in_prev) :
+    data{ std::move(in_data) },
+    prev{ in_prev }
 {
-    // Default constructor    
+    // Parametrized copy & move constructor
 }
 
 ////////////////////////////////////
@@ -76,7 +78,7 @@ inline SLList<DataType>::SLLNode::SLLNode() :
 
 template<typename DataType>
 inline SLList<DataType>::SLList() :
-    back_{ new Node() },
+    back_{ new Node(DataType(),nullptr) },
     size_{ 0 }
 {
     back_->data = DataType();
@@ -106,10 +108,8 @@ inline void SLList<DataType>::Clear() {
 
 template<typename DataType>
 inline void SLList<DataType>::PushBack(DataType&& data) {
-    NodePtr newbie = new Node();
-    newbie->data = std::move(data);
     NodePtr back_node = back_->prev;
-    newbie->prev = back_node;
+    NodePtr newbie = new Node(std::move(data), back_node);
     back_->prev = newbie;
     ++size_;
 }
@@ -142,7 +142,7 @@ inline void SLList<DataType>::FromBack(OperationFnc& operation_fnc) {
         current = index;
         index = index->prev;
         operation_fnc(current);
-    }    
+    }
 }
 
 template<typename DataType>
