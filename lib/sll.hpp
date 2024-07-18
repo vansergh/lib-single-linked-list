@@ -20,8 +20,8 @@ private:
         friend SLList;
         SLLNode(const SLLNode&) = delete;
         SLLNode(SLLNode&&) = delete;
-        SLLNode() = delete;
 
+        SLLNode();
         SLLNode(DataType&& in_data, SLLNode* in_prev);
 
         DataType data;
@@ -65,6 +65,13 @@ inline DataType& SLList<DataType>::SLLNode::GetData() {
 }
 
 template<typename DataType>
+inline SLList<DataType>::SLLNode::SLLNode() :
+    SLLNode(DataType(), nullptr)
+{
+    // Default constructor
+}
+
+template<typename DataType>
 inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::SLLNode* in_prev) :
     data{ std::move(in_data) },
     prev{ in_prev }
@@ -78,7 +85,7 @@ inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::
 
 template<typename DataType>
 inline SLList<DataType>::SLList() :
-    back_{ new Node(DataType(),nullptr) },
+    back_{ new Node() },
     size_{ 0 }
 {
     // Default constructor
