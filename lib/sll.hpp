@@ -1,34 +1,37 @@
 #ifndef SLL_HPP
 #define SLL_HPP
 
-#include <iostream>
-
-////////////////////////////////////
-// SLLNode declaration
-//////////////////////////////////  
-
-template <class DataType>
-struct SLLNode {
-public:
-    SLLNode(const SLLNode<DataType>&) = delete;
-    SLLNode(SLLNode<DataType>&&) = delete;
-
-    SLLNode();
-    ~SLLNode();
-
-    DataType data;
-    SLLNode* prev{ nullptr };
-};
-
 ////////////////////////////////////
 // SLList declaration
 //////////////////////////////////  
 
-template <class DataType>
+template <typename DataType>
 class SLList {
+private:
+
+    ////////////////////////////////////
+    // SLLNode declaration
+    //////////////////////////////////  
+
+    struct SLLNode {
+    public:
+        SLLNode(const SLLNode&) = delete;
+        SLLNode(SLLNode&&) = delete;
+
+        SLLNode();
+
+        DataType data;
+        SLLNode* prev;
+    };    
+
+    typedef SLLNode Node;
+    typedef Node* NodePtr;
+    typedef unsigned long long int size_t;
+
+    NodePtr back_{ nullptr };
+    size_t size_{ 0 };
+
 public:
-    typedef SLLNode<DataType> Node;
-    typedef SLLNode<DataType>* NodePtr;
 
     SLList(const SLList&) = delete;
     SLList(SLList&&) = delete;
@@ -37,40 +40,33 @@ public:
     ~SLList();
 
     void Clear();
-    void PushBack(const DataType& data);
+    void PushBack(DataType&& data);
     void PopBack();
-    SLLNode<DataType>* Back();
-    template <class OperationFnc>
+    DataType& Back();
+    template <typename OperationFnc>
     void FromBack(OperationFnc& operation_fnc);
-    bool IsEmpty();
-    unsigned long long int Size();
-    void Print();
-private:
-    NodePtr back_{ nullptr };
-    unsigned long long int size_{ 0 };
+    bool IsEmpty() const;
+    size_t Size() const;
+    template <typename PrintFnc>
+    void Print(const PrintFnc& print_fnc) const;
 };
 
 ////////////////////////////////////
 // SLLNode defenition
 //////////////////////////////////  
 
-template<class DataType>
-inline SLLNode<DataType>::SLLNode() :
-    prev{ nullptr }
+template<typename DataType>
+inline SLList<DataType>::SLLNode::SLLNode() :
+    prev{ nullptr }    
 {
-    // Default constructor
-}
-
-template<class DataType>
-inline SLLNode<DataType>::~SLLNode() {
-    data.~DataType();
+    // Default constructor    
 }
 
 ////////////////////////////////////
 // SLList defenition
 //////////////////////////////////  
 
-template<class DataType>
+template<typename DataType>
 inline SLList<DataType>::SLList() :
     back_{ new Node() },
     size_{ 0 }
@@ -78,13 +74,13 @@ inline SLList<DataType>::SLList() :
     back_->data = DataType();
 }
 
-template<class DataType>
+template<typename DataType>
 inline SLList<DataType>::~SLList() {
     Clear();
     delete back_;
 }
 
-template<class DataType>
+template<typename DataType>
 inline void SLList<DataType>::Clear() {
     if (IsEmpty()) {
         return;
@@ -100,17 +96,17 @@ inline void SLList<DataType>::Clear() {
     size_ = 0;
 }
 
-template<class DataType>
-inline void SLList<DataType>::PushBack(const DataType& data) {
+template<typename DataType>
+inline void SLList<DataType>::PushBack(DataType&& data) {
     NodePtr newbie = new Node();
-    newbie->data = DataType(data);
+    newbie->data = data;
     NodePtr back_node = back_->prev;
     newbie->prev = back_node;
     back_->prev = newbie;
     ++size_;
 }
 
-template<class DataType>
+template<typename DataType>
 inline void SLList<DataType>::PopBack() {
     if (IsEmpty()) {
         return;
@@ -121,13 +117,13 @@ inline void SLList<DataType>::PopBack() {
     --size_;
 }
 
-template<class DataType>
-inline SLLNode<DataType>* SLList<DataType>::Back() {
-    return IsEmpty() ? back_ : back_->prev;
+template<typename DataType>
+inline DataType& SLList<DataType>::Back() {
+    return IsEmpty() ? back_->data : back_->prev->data;
 }
 
-template<class DataType>
-template<class OperationFnc>
+template<typename DataType>
+template<typename OperationFnc>
 inline void SLList<DataType>::FromBack(OperationFnc& operation_fnc) {
     if (IsEmpty()) {
         return;
@@ -141,30 +137,33 @@ inline void SLList<DataType>::FromBack(OperationFnc& operation_fnc) {
     }    
 }
 
-template<class DataType>
-inline bool SLList<DataType>::IsEmpty() {
+template<typename DataType>
+inline bool SLList<DataType>::IsEmpty() const {
     return size_ == 0;
 }
 
-template<class DataType>
-inline unsigned long long int SLList<DataType>::Size() {
+template<typename DataType>
+typename SLList<DataType>::size_t SLList<DataType>::Size() const {
     return size_;
 }
 
-template<class DataType>
-inline void SLList<DataType>::Print() {
+template<typename DataType>
+template<typename PrintFnc>
+inline void SLList<DataType>::Print(const PrintFnc& print_fnc) const {
     if (IsEmpty()) {
-        std::cout << "List is empty";
+        print_fnc("List is empty");
         return;
     }
     NodePtr index = back_->prev;
     while (index != nullptr) {
-        std::cout << "[" << index->data << "]";
+        print_fnc("[");
+        print_fnc(index->data);
+        print_fnc("]");
         if (index->prev != nullptr) {
-            std::cout << "<-";
+            print_fnc("<-");
         }
         index = index->prev;
-    }    
+    }
 }
 
 #endif
