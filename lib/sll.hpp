@@ -34,7 +34,7 @@ private:
 
     NodePtr back_{ nullptr };
     size_t size_{ 0 };
-    DataType temp_value_;
+    DataType empty_;
 
 public:
 
@@ -80,7 +80,8 @@ inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::
 template<typename DataType>
 inline SLList<DataType>::SLList() :
     back_{ nullptr },
-    size_{ 0 }
+    size_{ 0 },
+    empty_{ DataType() }
 {
     // Default constructor
 }
@@ -121,7 +122,7 @@ inline void SLList<DataType>::PopBack() {
 
 template<typename DataType>
 inline DataType& SLList<DataType>::Back() {
-    return IsEmpty() ? temp_value_ : back_->data;
+    return IsEmpty() ? empty_ : back_->data;
 }
 
 template<typename DataType>
