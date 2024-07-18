@@ -14,6 +14,8 @@ private:
     //////////////////////////////////  
 
     class SLLNode {
+    public:
+        DataType& GetData();        
     private:
         friend SLList;
         SLLNode(const SLLNode&) = delete;
@@ -57,6 +59,11 @@ public:
 ////////////////////////////////////
 // SLLNode defenition
 //////////////////////////////////  
+
+template<typename DataType>
+inline DataType& SLList<DataType>::SLLNode::GetData() {
+    return data;
+}
 
 template<typename DataType>
 inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::SLLNode* in_prev) :
