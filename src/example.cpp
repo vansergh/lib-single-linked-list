@@ -71,6 +71,17 @@ void TestSLListString() {
     std::cout << "> Back: " << list.Back() << std::endl;
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
+    std::cout << "==============================\n";
+    std::cout << "> PushBack: cow, elephant, lion" << std::endl;
+    list.PushBack("cow"s);
+    list.PushBack("elephant"s);
+    list.PushBack("lion"s);
+    std::cout << "> Print: ";
+    list.Print(print_fnc);
+    std::cout << std::endl;
+    std::cout << "> Back: " << list.Back() << std::endl;
+    std::cout << "> Size: " << list.Size() << std::endl;
+    std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";    
     bool from_back_first = true;
     auto from_back = [&from_back_first](const auto& node) {
@@ -155,6 +166,17 @@ void TestSLListInt() {
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
+    std::cout << "> PushBack: 7, 9, 12" << std::endl;
+    list.PushBack(7);
+    list.PushBack(9);
+    list.PushBack(12);
+    std::cout << "> Print: ";
+    list.Print(print_fnc);
+    std::cout << std::endl;
+    std::cout << "> Back: " << list.Back() << std::endl;
+    std::cout << "> Size: " << list.Size() << std::endl;
+    std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
+    std::cout << "==============================\n";    
     bool from_back_first = true;
     auto from_back = [&from_back_first](const auto& node) {
         if (!from_back_first) {
