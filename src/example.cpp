@@ -78,7 +78,7 @@ void TestSLListString() {
             std::cout << ", ";
         }
         from_back_first = false;
-        std::cout << node->data;
+        std::cout << node->GetData();
         };    
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
@@ -161,7 +161,7 @@ void TestSLListInt() {
             std::cout << ", ";
         }
         from_back_first = false;
-        std::cout << node->data;
+        std::cout << node->GetData();
         };    
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
