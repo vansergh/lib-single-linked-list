@@ -4,9 +4,11 @@
 
 void TestSLListString() {
     using namespace std::literals;
-    auto print_fnc = [](const auto& item) {
-        std::cout << item;
-        };
+    auto print_fnc{
+        [](const auto& item) {
+            std::cout << item;
+        }
+    };
     SLList<std::string> list;
     std::cout << "==============================\n";
     std::cout << "> Back: " << list.Back() << std::endl;
@@ -85,13 +87,15 @@ void TestSLListString() {
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
     bool from_back_first = true;
-    auto from_back = [&from_back_first](const auto& node) {
-        if (!from_back_first) {
-            std::cout << ", ";
+    auto from_back{
+        [&from_back_first](const auto& node) {
+            if (!from_back_first) {
+                std::cout << ", ";
+            }
+            from_back_first = false;
+            std::cout << node->GetData();
         }
-        from_back_first = false;
-        std::cout << node->GetData();
-        };
+    };
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
     std::cout << std::endl;
@@ -111,9 +115,11 @@ void TestSLListString() {
 }
 
 void TestSLListInt() {
-    auto print_fnc = [](const auto& item) {
-        std::cout << item;
-        };
+    auto print_fnc{
+        [](const auto& item) {
+            std::cout << item;
+        }
+    };
     SLList<int> list;
     std::cout << "==============================\n";
     std::cout << "> Back: " << list.Back() << std::endl;
@@ -179,13 +185,15 @@ void TestSLListInt() {
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
     bool from_back_first = true;
-    auto from_back = [&from_back_first](const auto& node) {
-        if (!from_back_first) {
-            std::cout << ", ";
+    auto from_back{
+        [&from_back_first](const auto& node) {
+            if (!from_back_first) {
+                std::cout << ", ";
+            }
+            from_back_first = false;
+            std::cout << node->GetData();
         }
-        from_back_first = false;
-        std::cout << node->GetData();
-        };
+    };
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
     std::cout << std::endl;
