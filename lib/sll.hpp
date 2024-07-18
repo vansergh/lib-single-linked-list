@@ -81,7 +81,7 @@ inline SLList<DataType>::SLList() :
     back_{ new Node(DataType(),nullptr) },
     size_{ 0 }
 {
-    back_->data = DataType();
+    // Default constructor
 }
 
 template<typename DataType>
