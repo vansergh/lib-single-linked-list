@@ -1,14 +1,16 @@
 #include <iostream>
+#include <stack>
 #include "../lib/sll.hpp"
 
 void TestSLListString() {
     using namespace std::literals;
     auto print_fnc = [](const auto& item) {
         std::cout << item;
-        };    
+        };
     SLList<std::string> list;
     std::cout << "==============================\n";
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -19,7 +21,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -28,7 +31,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -37,7 +41,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -46,7 +51,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -55,7 +61,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -68,7 +75,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -79,10 +87,11 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
-    std::cout << "==============================\n";    
+    std::cout << "==============================\n";
     bool from_back_first = true;
     auto from_back = [&from_back_first](const auto& node) {
         if (!from_back_first) {
@@ -90,11 +99,12 @@ void TestSLListString() {
         }
         from_back_first = false;
         std::cout << node->GetData();
-        };    
+        };
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -103,7 +113,8 @@ void TestSLListString() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -112,10 +123,11 @@ void TestSLListString() {
 void TestSLListInt() {
     auto print_fnc = [](const auto& item) {
         std::cout << item;
-        };    
+        };
     SLList<int> list;
     std::cout << "==============================\n";
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -126,7 +138,8 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -135,7 +148,8 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -144,7 +158,8 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -153,7 +168,8 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -162,7 +178,8 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -173,10 +190,11 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
-    std::cout << "==============================\n";    
+    std::cout << "==============================\n";
     bool from_back_first = true;
     auto from_back = [&from_back_first](const auto& node) {
         if (!from_back_first) {
@@ -184,11 +202,12 @@ void TestSLListInt() {
         }
         from_back_first = false;
         std::cout << node->GetData();
-        };    
+        };
     std::cout << "> FromBack: ";
     list.FromBack(from_back);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
@@ -197,20 +216,23 @@ void TestSLListInt() {
     std::cout << "> Print: ";
     list.Print(print_fnc);
     std::cout << std::endl;
-    std::cout << "> Back: " << list.Back() << std::endl;
+    if (list.IsEmpty()) { std::cout << "> Back: Empty" << std::endl; }
+    else { std::cout << "> Back: " << list.Back() << std::endl; }
     std::cout << "> Size: " << list.Size() << std::endl;
     std::cout << "> Empty: " << (list.IsEmpty() ? "Yes" : "No") << std::endl;
     std::cout << "==============================\n";
 }
 
 int main() {
+
     std::cout << "//////////////////////////////\n";
     std::cout << "// Scalar test              //\n";
     std::cout << "//////////////////////////////\n\n";
     TestSLListInt();
     std::cout << "\n//////////////////////////////\n";
     std::cout << "// Class (std::string) test //\n";
-    std::cout << "//////////////////////////////\n\n";    
+    std::cout << "//////////////////////////////\n\n";
     TestSLListString();
+
     return 0;
 }
