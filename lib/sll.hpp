@@ -137,7 +137,22 @@ inline SLList<DataType>::SLList(const SLList& other) :
 {
     // Copy constructor
 }
- 
+
+template<typename DataType>
+inline SLList<DataType>::SLList(SLList&& other) :
+    size_{ other.size_ },
+    empty_{ DataType() },
+    back_{ other.back_ }
+{
+    other.back_ = nullptr;
+    other.Clear();
+}
+
+template<typename DataType>
+inline SLList<DataType>::~SLList() {
+    Clear();
+}
+
 template<typename DataType>
 inline SLList<DataType>& SLList<DataType>::operator=(const SLList& other) {
     if (this == &other) {
@@ -158,21 +173,6 @@ inline SLList<DataType>& SLList<DataType>::operator=(SLList&& other) {
         other.Clear();
     }
     return *this;
-}
-
-template<typename DataType>
-inline SLList<DataType>::SLList(SLList&& other) :
-    size_{ other.size_ },
-    empty_{ other.empty_ },
-    back_{ other.back_ }
-{
-    other.back_ = nullptr;
-    other.Clear();
-}
-
-template<typename DataType>
-inline SLList<DataType>::~SLList() {
-    Clear();
 }
 
 template<typename DataType>
