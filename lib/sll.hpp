@@ -102,10 +102,10 @@ inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLL
         return nullptr;
     }
     NodePtr index = other.back_->prev;
-    back_ = new Node(DataType(other.back_->data), nullptr);
+    back_ = new Node(other.back_->data, nullptr);
     while (index != nullptr) {
         if (index != nullptr) {
-            back_->prev = new Node(DataType(index->data), nullptr);    
+            back_->prev = new Node(index->data, nullptr);
         }
         index = index->prev;
     }
