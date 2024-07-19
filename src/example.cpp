@@ -298,6 +298,6 @@ int main() {
     std::cout << "\n//////////////////////////////\n";
     std::cout << "// Copy & Move test         //\n";
     std::cout << "//////////////////////////////\n\n";
-    TestCopyMove();    
+    TestCopyMove();   
     return 0;
 }
