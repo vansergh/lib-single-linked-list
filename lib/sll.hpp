@@ -37,7 +37,7 @@ private:
 
     size_t size_{ 0 };
     DataType empty_;
-    NodePtr back_{ nullptr };
+    NodePtr back_;
 
     NodePtr CopyNodes_(const SLList& other);
     NodePtr InitFromList_(const std::initializer_list<DataType>& init_list);
