@@ -41,7 +41,7 @@ private:
     NodePtr back_;
 
     NodePtr CopyNodes_(const SLList& other);
-    NodePtr InitFromList_(std::initializer_list<DataType>& init_list);
+    NodePtr InitFromList_(std::initializer_list<DataType> init_list);
 
 public:
 
@@ -111,10 +111,10 @@ inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLL
 }
 
 template<typename DataType>
-inline typename SLList<DataType>::NodePtr SLList<DataType>::InitFromList_(std::initializer_list<DataType>& init_list) {
+inline typename SLList<DataType>::NodePtr SLList<DataType>::InitFromList_(std::initializer_list<DataType> init_list) {
     back_ = nullptr;
     for (auto it = init_list.begin(); it != init_list.end(); ++it) {
-        PushBack(std::move(*it));
+        PushBack(*it);
     }
     return back_;
 }
