@@ -100,7 +100,7 @@ template<typename DataType>
 inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLList& other) {
     if (other.IsEmpty()) {
         return nullptr;
-    }
+    }   
     NodePtr index = other.back_->prev;
     back_ = new Node(other.back_->data, nullptr);
     while (index != nullptr) {
