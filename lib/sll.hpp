@@ -196,15 +196,13 @@ inline void SLList<DataType>::Clear() {
 
 template<typename DataType>
 inline void SLList<DataType>::PushBack(DataType&& data) {
-    NodePtr newbie = new Node(std::move(data), back_);
-    back_ = newbie;
+    back_ = new Node(std::move(data), back_);
     ++size_;
 }
 
 template<typename DataType>
 inline void SLList<DataType>::PushBack(const DataType& data) {
-    NodePtr newbie = new Node(data, back_);
-    back_ = newbie;
+    back_ = new Node(data, back_);
     ++size_;
 }
 
