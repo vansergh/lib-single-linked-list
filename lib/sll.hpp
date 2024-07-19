@@ -44,7 +44,6 @@ private:
 
 public:
 
-
     SLList();
     SLList(std::initializer_list<DataType>&& init_list);
     SLList(const SLList& other);
