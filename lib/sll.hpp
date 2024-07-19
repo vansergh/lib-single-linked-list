@@ -1,6 +1,8 @@
 #ifndef SLL_HPP
 #define SLL_HPP
 
+#include <initializer_list>
+
 ////////////////////////////////////
 // SLList declaration
 //////////////////////////////////  
@@ -15,9 +17,10 @@ private:
 
     class SLLNode {
     public:
-        DataType& GetData();        
+        DataType& GetData();
     private:
         friend SLList;
+
         SLLNode(const SLLNode&) = delete;
         SLLNode(SLLNode&&) = delete;
         SLLNode() = delete;
@@ -32,17 +35,24 @@ private:
     typedef Node* NodePtr;
     typedef unsigned long long int size_t;
 
-    NodePtr back_{ nullptr };
     size_t size_{ 0 };
     DataType empty_;
+    NodePtr back_{ nullptr };
+
+    NodePtr CopyNodes_(const SLList& other);
+    NodePtr InitFromList_(const std::initializer_list<DataType>& init_list);
 
 public:
 
-    SLList(const SLList&) = delete;
-    SLList(SLList&&) = delete;
 
     SLList();
+    SLList(std::initializer_list<DataType>&& init_list);
+    SLList(const SLList& other);
+    SLList(SLList&& other);
     ~SLList();
+
+    SLList& operator=(const SLList& other);
+    SLList& operator=(SLList&& other);
 
     void Clear();
     void PushBack(DataType&& data);
@@ -78,14 +88,89 @@ inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::
 //////////////////////////////////  
 
 template<typename DataType>
+inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLList& other) {
+    if (other.IsEmpty()) {
+        return nullptr;
+    }
+    NodePtr index = other.back_->prev;
+    back_ = new Node(DataType(other.back_->data), nullptr);
+    while (index != nullptr) {
+        if (index != nullptr) {
+            back_->prev = new Node(DataType(index->data), nullptr);    
+        }
+        index = index->prev;
+    }
+    return back_;
+}
+
+template<typename DataType>
+inline typename SLList<DataType>::NodePtr SLList<DataType>::InitFromList_(const std::initializer_list<DataType>& init_list) {
+    back_ = nullptr;
+    for (auto it = init_list.begin(); it != init_list.end(); ++it) {
+        PushBack(DataType(*it));
+    }
+    return back_;
+}
+
+template<typename DataType>
 inline SLList<DataType>::SLList() :
-    back_{ nullptr },
     size_{ 0 },
-    empty_{ DataType() }
+    empty_{ DataType() },
+    back_{ nullptr }
 {
     // Default constructor
 }
+
+template<typename DataType>
+inline SLList<DataType>::SLList(std::initializer_list<DataType>&& init_list) :
+    size_{ 0 },
+    empty_{ DataType() },
+    back_{ InitFromList_(init_list) }
+{
+    // std::initializer_list constructor
+}
+
+template<typename DataType>
+inline SLList<DataType>::SLList(const SLList& other) :
+    size_{ other.size_ },
+    empty_{ DataType() },
+    back_{ CopyNodes_(other) }
+{
+    // Copy constructor
+}
  
+template<typename DataType>
+inline SLList<DataType>& SLList<DataType>::operator=(const SLList& other) {
+    if (this == &other) {
+        Clear();
+        size_ = other.size_;
+        back_ = CopyNodes_(other);
+    }
+    return *this;
+}
+
+template<typename DataType>
+inline SLList<DataType>& SLList<DataType>::operator=(SLList&& other) {
+    if (this != &other) {
+        Clear();
+        back_ = other.back_;
+        size_ = other.size_;
+        other.back_ = nullptr;
+        other.Clear();
+    }
+    return *this;
+}
+
+template<typename DataType>
+inline SLList<DataType>::SLList(SLList&& other) :
+    size_{ other.size_ },
+    empty_{ other.empty_ },
+    back_{ other.back_ }
+{
+    other.back_ = nullptr;
+    other.Clear();
+}
+
 template<typename DataType>
 inline SLList<DataType>::~SLList() {
     Clear();

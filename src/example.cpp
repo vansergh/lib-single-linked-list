@@ -212,8 +212,81 @@ void TestSLListInt() {
     std::cout << "==============================\n";
 }
 
-int main() {
+void TestCopyMove() {
+    using namespace std::literals;
+    auto print_fnc{
+        [](const auto& item) {
+            std::cout << item;
+        }
+    };
 
+    
+    std::cout << "==============================\n";
+    std::cout << "> Initialization\n";
+    std::cout << "==============================\n";
+    std::cout << "> SLList<std::string> list1 = SLList<std::string>({ \"hello\"s,\"world\"s }); // std::initializer_list&& <- move" << std::endl;
+    SLList<std::string> list1 = SLList<std::string>({ "hello"s,"world"s });
+    std::cout << "> SLList<std::string> list2 = {\"blue\"s,\"red\"s}; // std::initializer_list&& <- move" << std::endl;
+    SLList<std::string> list2 = {"blue"s,"red"s};
+    std::cout << "> SLList<std::string> list3({ \"cat\", \"dog\" }); // std::initializer_list&& <- move" << std::endl;
+    SLList<std::string> list3({ "cat", "dog" });
+    std::cout << "> SLList<std::string> list4; // <- default empty constructor" << std::endl;
+    SLList<std::string> list4;
+    std::cout << "> list4.PushBack(\"one\");" << std::endl;
+    std::cout << "> list4.PushBack(\"two\");" << std::endl;
+    std::cout << "> list4.PushBack(\"five\");" << std::endl;
+    list4.PushBack("one");
+    list4.PushBack("two");
+    list4.PushBack("five");
+    std::cout << "==============================\n";
+    std::cout << "> Print list1: ";list1.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list2: ";list2.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list3: ";list3.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list4: ";list4.Print(print_fnc);std::cout << std::endl;
+    std::cout << "==============================\n";
+    std::cout << "> Copy\n";
+    std::cout << "==============================\n";
+    std::cout << "> Print list1: ";list1.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> {" << std::endl;
+    std::cout << "> \tSLList<std::string> list_r1 = list1;" << std::endl;
+    {
+        SLList<std::string> list_r1 = list1;
+        std::cout << "> \tPrint list_r1: ";list_r1.Print(print_fnc);std::cout << std::endl;
+        std::cout << "> \tPrint list1: ";list1.Print(print_fnc);std::cout << std::endl;        
+    }
+    std::cout << "> }" << std::endl;
+    std::cout << "> Print list1: ";list1.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> list_r1 deleted" << std::endl;
+    std::cout << "==============================\n";
+    std::cout << "> Print list2: ";list2.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> SLList<std::string> list_r2(list2);" << std::endl;
+    SLList<std::string> list_r2(list2);
+    std::cout << "> Print list_r2: ";list_r2.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list2: ";list2.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> list_r2.Clear();" << std::endl;
+    list_r2.Clear();
+    std::cout << "> Print list_r2: ";list_r2.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list2: ";list2.Print(print_fnc);std::cout << std::endl;    
+    std::cout << "==============================\n";
+    std::cout << "> Move\n";
+    std::cout << "==============================\n";
+    std::cout << "> Print list3: ";list3.Print(print_fnc);std::cout << std::endl;    
+    std::cout << "> SLList<std::string> list_r3;" << std::endl;
+    SLList<std::string> list_r3;
+    std::cout << "> list_r3 = std::move(list3);" << std::endl;
+    list_r3 = std::move(list3);
+    std::cout << "> Print list3: ";list3.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list_r3: ";list_r3.Print(print_fnc);std::cout << std::endl;
+    std::cout << "==============================\n";
+    std::cout << "> Print list4: ";list4.Print(print_fnc);std::cout << std::endl;    
+    std::cout << "> SLList<std::string> list_r4(std::move(list4));" << std::endl;
+    SLList<std::string> list_r4(std::move(list4));
+    std::cout << "> Print list4: ";list4.Print(print_fnc);std::cout << std::endl;
+    std::cout << "> Print list_r4: ";list_r4.Print(print_fnc);std::cout << std::endl;
+    std::cout << "==============================\n";    
+}
+
+int main() {
     std::cout << "//////////////////////////////\n";
     std::cout << "// Scalar test              //\n";
     std::cout << "//////////////////////////////\n\n";
@@ -222,6 +295,9 @@ int main() {
     std::cout << "// Class (std::string) test //\n";
     std::cout << "//////////////////////////////\n\n";
     TestSLListString();
-
+    std::cout << "\n//////////////////////////////\n";
+    std::cout << "// Copy & Move test         //\n";
+    std::cout << "//////////////////////////////\n\n";
+    TestCopyMove();    
     return 0;
 }

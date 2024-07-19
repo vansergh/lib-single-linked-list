@@ -1,9 +1,9 @@
 ```
-==124755== Memcheck, a memory error detector
-==124755== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==124755== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==124755== Command: ./single-linked-list
-==124755==
+==17287== Memcheck, a memory error detector
+==17287== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==17287== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==17287== Command: ./single-linked-list
+==17287==
 //////////////////////////////
 // Scalar test              //
 //////////////////////////////
@@ -123,12 +123,65 @@
 > Size: 0
 > Empty: Yes
 ==============================
-==124755==
-==124755== HEAP SUMMARY:
-==124755==     in use at exit: 0 bytes in 0 blocks
-==124755==   total heap usage: 21 allocs, 21 frees, 74,320 bytes allocated
-==124755==
-==124755== All heap blocks were freed -- no leaks are possible
-==124755==
-==124755== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+//////////////////////////////
+// Copy & Move test         //
+//////////////////////////////
+
+==============================
+> Initialization
+==============================
+> SLList<std::string> list1 = SLList<std::string>({ "hello"s,"world"s }); // std::initializer_list&& <- move
+> SLList<std::string> list2 = {"blue"s,"red"s}; // std::initializer_list&& <- move
+> SLList<std::string> list3({ "cat", "dog" }); // std::initializer_list&& <- move
+> SLList<std::string> list4; // <- default empty constructor
+> list4.PushBack("one");
+> list4.PushBack("two");
+> list4.PushBack("five");
+==============================
+> Print list1: [world]<-[hello]
+> Print list2: [red]<-[blue]
+> Print list3: [dog]<-[cat]
+> Print list4: [five]<-[two]<-[one]
+==============================
+> Copy
+==============================
+> Print list1: [world]<-[hello]
+> {
+>       SLList<std::string> list_r1 = list1;
+>       Print list_r1: [world]<-[hello]
+>       Print list1: [world]<-[hello]
+> }
+> Print list1: [world]<-[hello]
+> list_r1 deleted
+==============================
+> Print list2: [red]<-[blue]
+> SLList<std::string> list_r2(list2);
+> Print list_r2: [red]<-[blue]
+> Print list2: [red]<-[blue]
+> list_r2.Clear();
+> Print list_r2: List is empty
+> Print list2: [red]<-[blue]
+==============================
+> Move
+==============================
+> Print list3: [dog]<-[cat]
+> SLList<std::string> list_r3;
+> list_r3 = std::move(list3);
+> Print list3: List is empty
+> Print list_r3: [dog]<-[cat]
+==============================
+> Print list4: [five]<-[two]<-[one]
+> SLList<std::string> list_r4(std::move(list4));
+> Print list4: List is empty
+> Print list_r4: [five]<-[two]<-[one]
+==============================
+==17287==
+==17287== HEAP SUMMARY:
+==17287==     in use at exit: 0 bytes in 0 blocks
+==17287==   total heap usage: 32 allocs, 32 frees, 74,784 bytes allocated
+==17287==
+==17287== All heap blocks were freed -- no leaks are possible
+==17287==
+==17287== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
