@@ -26,6 +26,7 @@ private:
         SLLNode() = delete;
 
         SLLNode(DataType&& in_data, SLLNode* in_prev);
+        SLLNode(const DataType& in_data, SLLNode* in_prev);
 
         DataType data;
         SLLNode* prev;
@@ -55,6 +56,7 @@ public:
 
     void Clear();
     void PushBack(DataType&& data);
+    void PushBack(const DataType& data);
     void PopBack();
     DataType& Back();
     template <typename OperationFnc>
@@ -79,7 +81,15 @@ inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::
     data{ std::move(in_data) },
     prev{ in_prev }
 {
-    // Parametrized constructor
+    // Parametrized move constructor
+}
+
+template<typename DataType>
+inline SLList<DataType>::SLLNode::SLLNode(const DataType& in_data, SLList<DataType>::SLLNode* in_prev) :
+    data{ DataType(in_data) },
+    prev{ in_prev }
+{
+    // Parametrized copy constructor
 }
 
 ////////////////////////////////////
@@ -189,6 +199,13 @@ inline void SLList<DataType>::Clear() {
 template<typename DataType>
 inline void SLList<DataType>::PushBack(DataType&& data) {
     NodePtr newbie = new Node(std::move(data), back_);
+    back_ = newbie;
+    ++size_;
+}
+
+template<typename DataType>
+inline void SLList<DataType>::PushBack(const DataType& data) {
+    NodePtr newbie = new Node(data, back_);
     back_ = newbie;
     ++size_;
 }
