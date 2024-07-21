@@ -60,7 +60,7 @@ public:
     void PopBack();
     DataType& Back();
     template <typename OperationFnc>
-    void FromBack(OperationFnc& operation_fnc);
+    void FromBack(OperationFnc&& operation_fnc);
     bool IsEmpty() const;
     size_t Size() const;
     template <typename PrintFnc>
@@ -224,7 +224,7 @@ inline DataType& SLList<DataType>::Back() {
 
 template<typename DataType>
 template<typename OperationFnc>
-inline void SLList<DataType>::FromBack(OperationFnc& operation_fnc) {
+inline void SLList<DataType>::FromBack(OperationFnc&& operation_fnc) {
     NodePtr index{ back_ };
     NodePtr current{ nullptr };
     while (index != nullptr) {
