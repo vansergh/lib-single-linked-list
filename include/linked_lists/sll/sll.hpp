@@ -376,13 +376,15 @@ template<typename DataType>
 
     template<typename DataType>
     inline void forward_list<DataType>::push_front(DataType&& data) {
-        front_ = new Node(std::move(data), front_);
+        NodePtr new_node = new Node(std::move(data), front_);
+        front_ = new_node;
         ++size_;
     }
 
     template<typename DataType>
     inline void forward_list<DataType>::push_front(const DataType& data) {
-        front_ = new Node(data, front_);
+        NodePtr new_node = new Node(data, front_);
+        front_ = new_node;
         ++size_;
     }
 
