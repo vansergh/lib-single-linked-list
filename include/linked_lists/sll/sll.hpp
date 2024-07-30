@@ -2,8 +2,6 @@
 #define SLL_HPP
 
 #include <initializer_list>
-#include <ostream>
-
 
 namespace linked_lists {
 
@@ -258,16 +256,16 @@ namespace linked_lists {
 
     template<typename DataType>
     inline SLList<DataType>::SLList(std::initializer_list<DataType> init_list) :
-        back_{ nullptr },
-        size_{ 0 }
+        size_{ 0 },
+        back_{ nullptr }
     {
         CopyAndSwap_(init_list, init_list.size());
     }
 
     template<typename DataType>
     inline SLList<DataType>::SLList(const SLList& other) :
-        back_{ nullptr },
-        size_{ 0 }
+        size_{ 0 },
+        back_{ nullptr }
     {
         CopyAndSwap_(other, other.size_);
     }

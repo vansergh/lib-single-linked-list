@@ -1,27 +1,10 @@
 #include <iostream>
 #include <string>
 #include <stack>
-#include "../lib/sll.hpp"
+#include <linked_lists/sll/sll.hpp>
+#include <linked_lists/sll/utils.hpp>
 
 using namespace linked_lists;
-
-template<typename DataType>
-std::ostream& operator<<(std::ostream& out, const SLList<DataType>& list) {
-
-    if (list.empty()) {
-        out << "List is empty";
-        return out;
-    }
-    bool is_first = true;
-    for (auto it = list.begin(); it != list.end(); ++it) {
-        if (!is_first) {
-            out << "<-";
-        }
-        is_first = false;
-        out << '[' << *it << ']';
-    }
-    return out;
-}
 
 void TestSLListString() {
     using namespace std::literals;

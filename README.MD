@@ -1,3 +1,27 @@
+Overloaded operator for print list:
+
+```
+template<typename DataType>
+std::ostream& operator<<(std::ostream& out, const SLList<DataType>& list) {
+
+    if (list.empty()) {
+        out << "List is empty";
+        return out;
+    }
+    bool is_first = true;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if (!is_first) {
+            out << "<-";
+        }
+        is_first = false;
+        out << '[' << *it << ']';
+    }
+    return out;
+}
+```
+
+Valgrind and test:
+
 ```
 ==204778== Memcheck, a memory error detector
 ==204778== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
