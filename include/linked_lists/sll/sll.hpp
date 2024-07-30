@@ -104,8 +104,10 @@ namespace linked_lists {
         using Iterator = ForwardIterator<DataType>;
         using ConstantIterator = ForwardIterator<const DataType>;
 
+        [[nodiscard]] Iterator before_begin() noexcept;
         [[nodiscard]] Iterator begin() noexcept;
         [[nodiscard]] Iterator end() noexcept;
+        [[nodiscard]] ConstantIterator cbefore_begin() const noexcept;
         [[nodiscard]] ConstantIterator begin() const noexcept;
         [[nodiscard]] ConstantIterator end() const noexcept;
         [[nodiscard]] ConstantIterator cbegin() const noexcept;
@@ -307,6 +309,14 @@ namespace linked_lists {
     }
 
     template<typename DataType>
+    inline typename SLList<DataType>::Iterator SLList<DataType>::before_begin() noexcept {
+        if (empty()) {
+            return end();
+        }
+        return Iterator(back_);
+    }
+
+template<typename DataType>
     inline typename SLList<DataType>::Iterator SLList<DataType>::begin() noexcept {
         if (empty()) {
             return end();
@@ -317,6 +327,14 @@ namespace linked_lists {
     template<typename DataType>
     inline typename SLList<DataType>::Iterator SLList<DataType>::end() noexcept {
         return Iterator(nullptr);
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::cbefore_begin() const noexcept {
+        if (empty()) {
+            return end();
+        }
+        return ConstantIterator(back_);
     }
 
     template<typename DataType>
@@ -398,8 +416,6 @@ namespace linked_lists {
     typename SLList<DataType>::size_t SLList<DataType>::size() const noexcept {
         return size_;
     }
-
-
 
 }
 #endif
