@@ -244,7 +244,7 @@ void TestCopyMove() {
 }
 
 int main() {
-/*     std::cout << "//////////////////////////////\n";
+    std::cout << "//////////////////////////////\n";
     std::cout << "// Scalar test              //\n";
     std::cout << "//////////////////////////////\n\n";
     TestSLListInt();
@@ -255,6 +255,6 @@ int main() {
     std::cout << "\n//////////////////////////////\n";
     std::cout << "// Copy & Move test         //\n";
     std::cout << "//////////////////////////////\n\n";
-    TestCopyMove(); */
+    TestCopyMove();
     return 0;
 }

@@ -82,8 +82,8 @@ namespace linked_lists {
         size_t size_{ 0 };
         NodePtr back_;
 
-        NodePtr CopyNodes_(const SLList& other);
-        NodePtr InitFromList_(std::initializer_list<DataType> init_list);
+        template <typename Container>
+        void CopyAndSwap_(const Container& container, std::size_t size);
 
     public:
 
@@ -120,14 +120,7 @@ namespace linked_lists {
         bool empty() const noexcept;
         size_t size() const noexcept;
 
-        void swap(SLList& other) noexcept {
-            Node* tmp_head_next = other.head_.next_node;
-            std::size_t tmp_size = other.size_;
-            other.head_.next_node = head_.next_node;
-            other.size_ = size_;
-            head_.next_node = tmp_head_next;
-            size_ = tmp_size;
-        }        
+        void swap(SLList& other) noexcept;
     };
 
     ////////////////////////////////////
@@ -234,27 +227,25 @@ namespace linked_lists {
     // SLList defenition
     //////////////////////////////////  
 
-    template<typename DataType>
-    inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLList& other) {
-        if (other.empty()) {
-            return nullptr;
-        }
-        NodePtr index = other.back_->prev;
-        back_ = new Node(other.back_->data, nullptr);
-        while (index != nullptr) {
-            back_->prev = new Node(index->data, nullptr);
-            index = index->prev;
-        }
-        return back_;
-    }
+    template <typename DataType>
+    template <typename Container>
+    void SLList<DataType>::CopyAndSwap_(const Container& container, std::size_t size) {
+        SLList<DataType> tmp_list;
 
-    template<typename DataType>
-    inline typename SLList<DataType>::NodePtr SLList<DataType>::InitFromList_(std::initializer_list<DataType> init_list) {
-        back_ = nullptr;
-        for (auto it = init_list.begin(); it != init_list.end(); ++it) {
-            push_back(*it);
+        Node* tmp{ nullptr };
+        for (const auto& node : container) {
+            Node* new_node = new Node(node, nullptr);
+            if (tmp) {
+                tmp->prev = new_node;
+            }
+            else {
+                tmp_list.back_ = new_node;
+            }
+            tmp = new_node;
         }
-        return back_;
+        tmp_list.size_ = size;
+
+        swap(tmp_list);
     }
 
     template<typename DataType>
@@ -267,18 +258,18 @@ namespace linked_lists {
 
     template<typename DataType>
     inline SLList<DataType>::SLList(std::initializer_list<DataType> init_list) :
-        size_{ 0 },
-        back_{ InitFromList_(init_list) }
+        back_{ nullptr },
+        size_{ 0 }
     {
-        // std::initializer_list constructor
+        CopyAndSwap_(init_list, init_list.size());
     }
 
     template<typename DataType>
     inline SLList<DataType>::SLList(const SLList& other) :
-        size_{ other.size_ },
-        back_{ CopyNodes_(other) }
+        back_{ nullptr },
+        size_{ 0 }
     {
-        // Copy constructor
+        CopyAndSwap_(other, other.size_);
     }
 
     template<typename DataType>
@@ -396,9 +387,21 @@ namespace linked_lists {
     }
 
     template<typename DataType>
+    void SLList<DataType>::swap(SLList& other) noexcept {
+        Node* tmp_back = other.back_;
+        std::size_t tmp_size = other.size_;
+        other.back_ = back_;
+        other.size_ = size_;
+        back_ = tmp_back;
+        size_ = tmp_size;
+    }
+
+    template<typename DataType>
     typename SLList<DataType>::size_t SLList<DataType>::size() const noexcept {
         return size_;
     }
+
+
 
 }
 #endif
