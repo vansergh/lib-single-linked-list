@@ -2,265 +2,399 @@
 #define SLL_HPP
 
 #include <initializer_list>
+#include <ostream>
 
-////////////////////////////////////
-// SLList declaration
-//////////////////////////////////  
 
-template <typename DataType>
-class SLList {
-private:
+namespace linked_lists {
 
     ////////////////////////////////////
-    // SLLNode declaration
+    // SLList declaration
     //////////////////////////////////  
 
-    class SLLNode {
-    public:
-        DataType& GetData() noexcept;
+    template <typename DataType>
+    class SLList {
     private:
-        friend SLList;
 
-        SLLNode(const SLLNode&) = delete;
-        SLLNode(SLLNode&&) = delete;
-        SLLNode() = delete;
+        ////////////////////////////////////
+        // Node declaration
+        //////////////////////////////////  
 
-        SLLNode(DataType&& in_data, SLLNode* in_prev);
-        SLLNode(const DataType& in_data, SLLNode* in_prev);
+        class Node {
+        private:
+            friend class SLList;
 
-        DataType data;
-        SLLNode* prev;
+            Node() = default;
+
+            Node(DataType&& in_data, Node* in_prev);
+            Node(const DataType& in_data, Node* in_prev);
+
+            DataType data;
+            Node* prev;
+        };
+
+        typedef Node* NodePtr;
+        typedef Node& NodeRef;
+        typedef unsigned long long int size_t;
+
+        ////////////////////////////////////
+        // ForwardIterator declaration
+        //////////////////////////////////      
+
+        template <typename IteratorDataType>
+        class ForwardIterator {
+        private:
+
+            friend class SLList;
+
+            explicit ForwardIterator(NodePtr node);
+
+        public:
+
+            using iterator_category = std::forward_iterator_tag;
+            using value_type = DataType;
+            using difference_type = std::ptrdiff_t;
+            using pointer = NodePtr;
+            using reference = NodeRef;
+
+            ForwardIterator() noexcept;
+            ForwardIterator(const ForwardIterator<DataType>& other) noexcept;
+
+            ForwardIterator& operator=(const ForwardIterator& rhs) = default;
+            [[nodiscard]] bool operator==(const ForwardIterator<const DataType>& rhs) const noexcept;
+            [[nodiscard]] bool operator!=(const ForwardIterator<const DataType>& rhs) const noexcept;
+            [[nodiscard]] bool operator==(const ForwardIterator<DataType>& rhs) const noexcept;
+            [[nodiscard]] bool operator!=(const ForwardIterator<DataType>& rhs) const noexcept;
+            ForwardIterator& operator++() noexcept;
+            ForwardIterator operator++(int) noexcept;
+            [[nodiscard]] value_type operator*() const noexcept;
+            [[nodiscard]] pointer operator->() const noexcept;
+
+        private:
+
+            NodePtr node_ = nullptr;
+
+        };
+
+        ////////////////////////////////////
+        // SLList private fields and members
+        //////////////////////////////////       
+
+        size_t size_{ 0 };
+        DataType empty_;
+        NodePtr back_;
+
+        NodePtr CopyNodes_(const SLList& other);
+        NodePtr InitFromList_(std::initializer_list<DataType> init_list);
+
+    public:
+
+        ////////////////////////////////////
+        // SLList public fields and members
+        //////////////////////////////////
+
+        SLList();
+        SLList(std::initializer_list<DataType> init_list);
+        SLList(const SLList& other);
+        SLList(SLList&& other);
+        ~SLList();
+
+        SLList& operator=(const SLList& other);
+        SLList& operator=(SLList&& other);
+
+        using value_type = DataType;
+        using reference = value_type&;
+        using const_reference = const value_type&;
+        using Iterator = ForwardIterator<DataType>;
+        using ConstantIterator = ForwardIterator<const DataType>;
+
+        [[nodiscard]] Iterator begin() noexcept;
+        [[nodiscard]] Iterator end() noexcept;
+        [[nodiscard]] ConstantIterator begin() const noexcept;
+        [[nodiscard]] ConstantIterator end() const noexcept;
+        [[nodiscard]] ConstantIterator cbegin() const noexcept;
+        [[nodiscard]] ConstantIterator cend() const noexcept;
+
+        void clear() noexcept;
+        void push_back(DataType&& data);
+        void push_back(const DataType& data);
+        void pop_back() noexcept;
+        bool empty() const noexcept;
+        size_t size() const noexcept;
     };
 
-    typedef SLLNode Node;
-    typedef Node* NodePtr;
-    typedef unsigned long long int size_t;
+    ////////////////////////////////////
+    // Node defenition
+    //////////////////////////////////  
 
-    size_t size_{ 0 };
-    DataType empty_;
-    NodePtr back_;
-
-    NodePtr CopyNodes_(const SLList& other);
-    NodePtr InitFromList_(std::initializer_list<DataType> init_list);
-
-public:
-
-    SLList();
-    SLList(std::initializer_list<DataType> init_list);
-    SLList(const SLList& other);
-    SLList(SLList&& other);
-    ~SLList();
-
-    SLList& operator=(const SLList& other);
-    SLList& operator=(SLList&& other);
-
-    void Clear() noexcept;
-    void PushBack(DataType&& data);
-    void PushBack(const DataType& data);
-    void PopBack() noexcept;
-    DataType& Back() noexcept;
-    template <typename OperationFnc>
-    void FromBack(OperationFnc&& operation_fnc) const;
-    bool IsEmpty() const noexcept;
-    size_t Size() const noexcept;
-    template <typename PrintFnc>
-    void Print(const PrintFnc& print_fnc) const;
-};
-
-////////////////////////////////////
-// SLLNode defenition
-//////////////////////////////////  
-
-template<typename DataType>
-inline DataType& SLList<DataType>::SLLNode::GetData() noexcept {
-    return data;
-}
-
-template<typename DataType>
-inline SLList<DataType>::SLLNode::SLLNode(DataType&& in_data, SLList<DataType>::SLLNode* in_prev) :
-    data{ std::move(in_data) },
-    prev{ in_prev }
-{
-    // Parametrized move constructor
-}
-
-template<typename DataType>
-inline SLList<DataType>::SLLNode::SLLNode(const DataType& in_data, SLList<DataType>::SLLNode* in_prev) :
-    data{ DataType(in_data) },
-    prev{ in_prev }
-{
-    // Parametrized copy constructor
-}
-
-////////////////////////////////////
-// SLList defenition
-//////////////////////////////////  
-
-template<typename DataType>
-inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLList& other) {
-    if (other.IsEmpty()) {
-        return nullptr;
-    }   
-    NodePtr index = other.back_->prev;
-    back_ = new Node(other.back_->data, nullptr);
-    while (index != nullptr) {
-        back_->prev = new Node(index->data, nullptr);
-        index = index->prev;
+    template<typename DataType>
+    inline SLList<DataType>::Node::Node(DataType&& in_data, SLList<DataType>::Node* in_prev) :
+        data{ std::move(in_data) },
+        prev{ in_prev }
+    {
+        // Parametrized move constructor
     }
-    return back_;
-}
 
-template<typename DataType>
-inline typename SLList<DataType>::NodePtr SLList<DataType>::InitFromList_(std::initializer_list<DataType> init_list) {
-    back_ = nullptr;
-    for (auto it = init_list.begin(); it != init_list.end(); ++it) {
-        PushBack(*it);
+    template<typename DataType>
+    inline SLList<DataType>::Node::Node(const DataType& in_data, SLList<DataType>::Node* in_prev) :
+        data{ DataType(in_data) },
+        prev{ in_prev }
+    {
+        // Parametrized copy constructor
     }
-    return back_;
-}
 
-template<typename DataType>
-inline SLList<DataType>::SLList() :
-    size_{ 0 },
-    empty_{ DataType() },
-    back_{ nullptr }
-{
-    // Default constructor
-}
+    ////////////////////////////////////
+    // ForwardIterator defenition
+    //////////////////////////////////  
 
-template<typename DataType>
-inline SLList<DataType>::SLList(std::initializer_list<DataType> init_list) :
-    size_{ 0 },
-    empty_{ DataType() },
-    back_{ InitFromList_(init_list) }
-{
-    // std::initializer_list constructor
-}
-
-template<typename DataType>
-inline SLList<DataType>::SLList(const SLList& other) :
-    size_{ other.size_ },
-    empty_{ DataType() },
-    back_{ CopyNodes_(other) }
-{
-    // Copy constructor
-}
-
-template<typename DataType>
-inline SLList<DataType>::SLList(SLList&& other) :
-    size_{ other.size_ },
-    empty_{ DataType() },
-    back_{ other.back_ }
-{
-    other.back_ = nullptr;
-    other.Clear();
-}
-
-template<typename DataType>
-inline SLList<DataType>::~SLList() {
-    Clear();
-}
-
-template<typename DataType>
-inline SLList<DataType>& SLList<DataType>::operator=(const SLList& other) {
-    if (this == &other) {
-        Clear();
-        size_ = other.size_;
-        back_ = CopyNodes_(other);
+    template<typename DataType>
+    template<typename IteratorDataType>
+    SLList<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(SLList<DataType>::NodePtr node) :
+        node_{ node }
+    {
+        // Parametrized constructor
     }
-    return *this;
-}
 
-template<typename DataType>
-inline SLList<DataType>& SLList<DataType>::operator=(SLList&& other) {
-    if (this != &other) {
-        Clear();
-        back_ = other.back_;
-        size_ = other.size_;
-        other.back_ = nullptr;
-        other.Clear();
+    template<typename DataType>
+    template<typename IteratorDataType>
+    SLList<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator() noexcept :
+        node_{ nullptr }
+    {
+        // Default constructor
     }
-    return *this;
-}
 
-template<typename DataType>
-inline void SLList<DataType>::Clear() noexcept {
-    NodePtr current{ nullptr };
-    while (back_ != nullptr) {
-        current = back_;
-        back_ = back_->prev;
-        delete current;
+    template<typename DataType>
+    template<typename IteratorDataType>
+    SLList<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(const ForwardIterator<DataType>& other) noexcept :
+        node_{ other.node_ }
+    {
+        node_->prev = other.node_->prev;
+        node_->data = other.node_->data;
     }
-    size_ = 0;
-}
 
-template<typename DataType>
-inline void SLList<DataType>::PushBack(DataType&& data) {
-    back_ = new Node(std::move(data), back_);
-    ++size_;
-}
-
-template<typename DataType>
-inline void SLList<DataType>::PushBack(const DataType& data) {
-    back_ = new Node(data, back_);
-    ++size_;
-}
-
-template<typename DataType>
-inline void SLList<DataType>::PopBack() noexcept {
-    if (IsEmpty()) {
-        return;
+    template<typename DataType>
+    template<typename IteratorDataType>
+    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator==(const ForwardIterator<const DataType>& rhs) const noexcept {
+        return this->node_ == rhs.node_;
     }
-    NodePtr back_node = back_->prev;
-    delete back_;
-    back_ = back_node;
-    --size_;
-}
 
-template<typename DataType>
-inline DataType& SLList<DataType>::Back() noexcept {
-    return IsEmpty() ? empty_ : back_->data;
-}
-
-template<typename DataType>
-template<typename OperationFnc>
-inline void SLList<DataType>::FromBack(OperationFnc&& operation_fnc) const {
-    NodePtr index{ back_ };
-    NodePtr current{ nullptr };
-    while (index != nullptr) {
-        current = index;
-        index = index->prev;
-        operation_fnc(current);
+    template<typename DataType>
+    template<typename IteratorDataType>
+    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator!=(const ForwardIterator<const DataType>& rhs) const noexcept {
+        return this->node_ != rhs.node_;
     }
-}
 
-template<typename DataType>
-inline bool SLList<DataType>::IsEmpty() const noexcept {
-    return size_ == 0;
-}
-
-template<typename DataType>
-typename SLList<DataType>::size_t SLList<DataType>::Size() const noexcept {
-    return size_;
-}
-
-template<typename DataType>
-template<typename PrintFnc>
-inline void SLList<DataType>::Print(const PrintFnc& print_fnc) const {
-    if (IsEmpty()) {
-        print_fnc("List is empty");
-        return;
+    template<typename DataType>
+    template<typename IteratorDataType>
+    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator==(const ForwardIterator<DataType>& rhs) const noexcept {
+        return this->node_ == rhs.node_;
     }
-    NodePtr index = back_;
-    while (index != nullptr) {
-        print_fnc("[");
-        print_fnc(index->data);
-        print_fnc("]");
-        if (index->prev != nullptr) {
-            print_fnc("<-");
+
+    template<typename DataType>
+    template<typename IteratorDataType>
+    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator!=(const ForwardIterator<DataType>& rhs) const noexcept {
+        return this->node_ != rhs.node_;
+    }
+
+    template<typename DataType>
+    template<typename IteratorDataType>
+    SLList<DataType>::ForwardIterator<IteratorDataType>& SLList<DataType>::ForwardIterator<IteratorDataType>::operator++() noexcept {
+        this->node_ = this->node_->prev;
+        return *this;
+    }
+
+    template<typename DataType>
+    template<typename IteratorDataType>
+    SLList<DataType>::ForwardIterator<IteratorDataType> SLList<DataType>::ForwardIterator<IteratorDataType>::operator++(int) noexcept {
+        ForwardIterator<IteratorDataType> old_value(*this);
+        ++(*this);
+        return old_value;
+    }
+
+    template<typename DataType>
+    template<typename IteratorDataType>
+    typename SLList<DataType>::ForwardIterator<IteratorDataType>::value_type SLList<DataType>::ForwardIterator<IteratorDataType>::operator*() const noexcept {
+        return node_->data;
+    }
+
+    template<typename DataType>
+    template<typename IteratorDataType>
+    typename SLList<DataType>::ForwardIterator<IteratorDataType>::pointer SLList<DataType>::ForwardIterator<IteratorDataType>::operator->() const noexcept {
+        return node_;
+    }
+
+    ////////////////////////////////////
+    // SLList defenition
+    //////////////////////////////////  
+
+    template<typename DataType>
+    inline typename SLList<DataType>::NodePtr SLList<DataType>::CopyNodes_(const SLList& other) {
+        if (other.empty()) {
+            return nullptr;
         }
-        index = index->prev;
+        NodePtr index = other.back_->prev;
+        back_ = new Node(other.back_->data, nullptr);
+        while (index != nullptr) {
+            back_->prev = new Node(index->data, nullptr);
+            index = index->prev;
+        }
+        return back_;
     }
-}
 
+    template<typename DataType>
+    inline typename SLList<DataType>::NodePtr SLList<DataType>::InitFromList_(std::initializer_list<DataType> init_list) {
+        back_ = nullptr;
+        for (auto it = init_list.begin(); it != init_list.end(); ++it) {
+            push_back(*it);
+        }
+        return back_;
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>::SLList() :
+        size_{ 0 },
+        empty_{ DataType() },
+        back_{ nullptr }
+    {
+        // Default constructor
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>::SLList(std::initializer_list<DataType> init_list) :
+        size_{ 0 },
+        empty_{ DataType() },
+        back_{ InitFromList_(init_list) }
+    {
+        // std::initializer_list constructor
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>::SLList(const SLList& other) :
+        size_{ other.size_ },
+        empty_{ DataType() },
+        back_{ CopyNodes_(other) }
+    {
+        // Copy constructor
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>::SLList(SLList&& other) :
+        size_{ other.size_ },
+        empty_{ DataType() },
+        back_{ other.back_ }
+    {
+        other.back_ = nullptr;
+        other.clear();
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>::~SLList() {
+        clear();
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>& SLList<DataType>::operator=(const SLList& other) {
+        if (this == &other) {
+            clear();
+            size_ = other.size_;
+            back_ = CopyNodes_(other);
+        }
+        return *this;
+    }
+
+    template<typename DataType>
+    inline SLList<DataType>& SLList<DataType>::operator=(SLList&& other) {
+        if (this != &other) {
+            clear();
+            back_ = other.back_;
+            size_ = other.size_;
+            other.back_ = nullptr;
+            other.clear();
+        }
+        return *this;
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::Iterator SLList<DataType>::begin() noexcept {
+        if (empty()) {
+            return end();
+        }
+        return Iterator(back_);
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::Iterator SLList<DataType>::end() noexcept {
+        return Iterator(nullptr);
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::begin() const noexcept {
+        if (empty()) {
+            return end();
+        }
+        return ConstantIterator(back_);
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::end() const noexcept {
+        return ConstantIterator(nullptr);
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::cbegin() const noexcept {
+        if (empty()) {
+            return end();
+        }
+        return ConstantIterator(back_);
+    }
+
+    template<typename DataType>
+    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::cend() const noexcept {
+        return ConstantIterator(nullptr);
+    }
+
+    template<typename DataType>
+    inline void SLList<DataType>::clear() noexcept {
+        NodePtr current{ nullptr };
+        while (back_ != nullptr) {
+            current = back_;
+            back_ = back_->prev;
+            delete current;
+        }
+        size_ = 0;
+    }
+
+    template<typename DataType>
+    inline void SLList<DataType>::push_back(DataType&& data) {
+        back_ = new Node(std::move(data), back_);
+        ++size_;
+    }
+
+    template<typename DataType>
+    inline void SLList<DataType>::push_back(const DataType& data) {
+        back_ = new Node(data, back_);
+        ++size_;
+    }
+
+    template<typename DataType>
+    inline void SLList<DataType>::pop_back() noexcept {
+        if (empty()) {
+            return;
+        }
+        NodePtr back_node = back_->prev;
+        delete back_;
+        back_ = back_node;
+        --size_;
+    }
+
+    template<typename DataType>
+    inline bool SLList<DataType>::empty() const noexcept {
+        return size_ == 0;
+    }
+
+    template<typename DataType>
+    typename SLList<DataType>::size_t SLList<DataType>::size() const noexcept {
+        return size_;
+    }
+
+}
 #endif
