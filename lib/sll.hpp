@@ -17,7 +17,7 @@ private:
 
     class SLLNode {
     public:
-        DataType& GetData();
+        DataType& GetData() noexcept;
     private:
         friend SLList;
 
@@ -54,15 +54,15 @@ public:
     SLList& operator=(const SLList& other);
     SLList& operator=(SLList&& other);
 
-    void Clear();
+    void Clear() noexcept;
     void PushBack(DataType&& data);
     void PushBack(const DataType& data);
-    void PopBack();
-    DataType& Back();
+    void PopBack() noexcept;
+    DataType& Back() noexcept;
     template <typename OperationFnc>
-    void FromBack(OperationFnc&& operation_fnc);
-    bool IsEmpty() const;
-    size_t Size() const;
+    void FromBack(OperationFnc&& operation_fnc) const;
+    bool IsEmpty() const noexcept;
+    size_t Size() const noexcept;
     template <typename PrintFnc>
     void Print(const PrintFnc& print_fnc) const;
 };
@@ -72,7 +72,7 @@ public:
 //////////////////////////////////  
 
 template<typename DataType>
-inline DataType& SLList<DataType>::SLLNode::GetData() {
+inline DataType& SLList<DataType>::SLLNode::GetData() noexcept {
     return data;
 }
 
@@ -184,7 +184,7 @@ inline SLList<DataType>& SLList<DataType>::operator=(SLList&& other) {
 }
 
 template<typename DataType>
-inline void SLList<DataType>::Clear() {
+inline void SLList<DataType>::Clear() noexcept {
     NodePtr current{ nullptr };
     while (back_ != nullptr) {
         current = back_;
@@ -207,7 +207,7 @@ inline void SLList<DataType>::PushBack(const DataType& data) {
 }
 
 template<typename DataType>
-inline void SLList<DataType>::PopBack() {
+inline void SLList<DataType>::PopBack() noexcept {
     if (IsEmpty()) {
         return;
     }
@@ -218,13 +218,13 @@ inline void SLList<DataType>::PopBack() {
 }
 
 template<typename DataType>
-inline DataType& SLList<DataType>::Back() {
+inline DataType& SLList<DataType>::Back() noexcept {
     return IsEmpty() ? empty_ : back_->data;
 }
 
 template<typename DataType>
 template<typename OperationFnc>
-inline void SLList<DataType>::FromBack(OperationFnc&& operation_fnc) {
+inline void SLList<DataType>::FromBack(OperationFnc&& operation_fnc) const {
     NodePtr index{ back_ };
     NodePtr current{ nullptr };
     while (index != nullptr) {
@@ -235,12 +235,12 @@ inline void SLList<DataType>::FromBack(OperationFnc&& operation_fnc) {
 }
 
 template<typename DataType>
-inline bool SLList<DataType>::IsEmpty() const {
+inline bool SLList<DataType>::IsEmpty() const noexcept {
     return size_ == 0;
 }
 
 template<typename DataType>
-typename SLList<DataType>::size_t SLList<DataType>::Size() const {
+typename SLList<DataType>::size_t SLList<DataType>::Size() const noexcept {
     return size_;
 }
 
