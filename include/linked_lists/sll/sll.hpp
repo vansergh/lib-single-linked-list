@@ -23,11 +23,11 @@ namespace linked_lists {
 
             Node() = default;
 
-            Node(DataType&& in_data, Node* in_prev);
-            Node(const DataType& in_data, Node* in_prev);
+            Node(DataType&& in_data, Node* in_next);
+            Node(const DataType& in_data, Node* in_next);
 
             DataType data;
-            Node* prev;
+            Node* next;
         };
 
         typedef Node* NodePtr;
@@ -44,7 +44,7 @@ namespace linked_lists {
 
             friend class forward_list;
 
-            explicit ForwardIterator(NodePtr node);
+            explicit ForwardIterator(NodePtr node, bool is_before_begin = false);
 
         public:
 
@@ -69,7 +69,8 @@ namespace linked_lists {
 
         private:
 
-            NodePtr node_ = nullptr;
+            NodePtr node_;
+            bool is_before_begin_;
 
         };
 
@@ -107,6 +108,7 @@ namespace linked_lists {
         [[nodiscard]] Iterator before_begin() noexcept;
         [[nodiscard]] Iterator begin() noexcept;
         [[nodiscard]] Iterator end() noexcept;
+        [[nodiscard]] ConstantIterator before_begin() const noexcept;
         [[nodiscard]] ConstantIterator cbefore_begin() const noexcept;
         [[nodiscard]] ConstantIterator begin() const noexcept;
         [[nodiscard]] ConstantIterator end() const noexcept;
@@ -116,6 +118,9 @@ namespace linked_lists {
         void clear() noexcept;
         void push_front(DataType&& data);
         void push_front(const DataType& data);
+        Iterator insert_after(ConstantIterator pos, DataType&& data);
+        Iterator insert_after(ConstantIterator pos, const DataType& data);
+        Iterator erase_after(ConstantIterator pos);
         void pop_front() noexcept;
         bool empty() const noexcept;
         size_t size() const noexcept;
@@ -128,17 +133,17 @@ namespace linked_lists {
     //////////////////////////////////  
 
     template<typename DataType>
-    inline forward_list<DataType>::Node::Node(DataType&& in_data, forward_list<DataType>::Node* in_prev) :
+    inline forward_list<DataType>::Node::Node(DataType&& in_data, forward_list<DataType>::Node* in_next) :
         data{ std::move(in_data) },
-        prev{ in_prev }
+        next{ in_next }
     {
         // Parametrized move constructor
     }
 
     template<typename DataType>
-    inline forward_list<DataType>::Node::Node(const DataType& in_data, forward_list<DataType>::Node* in_prev) :
+    inline forward_list<DataType>::Node::Node(const DataType& in_data, forward_list<DataType>::Node* in_next) :
         data{ DataType(in_data) },
-        prev{ in_prev }
+        next{ in_next }
     {
         // Parametrized copy constructor
     }
@@ -149,8 +154,9 @@ namespace linked_lists {
 
     template<typename DataType>
     template<typename IteratorDataType>
-    forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(forward_list<DataType>::NodePtr node) :
-        node_{ node }
+    forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(forward_list<DataType>::NodePtr node, bool is_before_begin) :
+        node_{ node },
+        is_before_begin_{ is_before_begin }
     {
         // Parametrized constructor
     }
@@ -158,7 +164,8 @@ namespace linked_lists {
     template<typename DataType>
     template<typename IteratorDataType>
     forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator() noexcept :
-        node_{ nullptr }
+        node_{ nullptr },
+        is_before_begin_{ false }
     {
         // Default constructor
     }
@@ -166,10 +173,10 @@ namespace linked_lists {
     template<typename DataType>
     template<typename IteratorDataType>
     forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(const ForwardIterator<DataType>& other) noexcept :
-        node_{ other.node_ }
+        node_{ other.node_ },
+        is_before_begin_{ other.is_before_begin_ }
     {
-        node_->prev = other.node_->prev;
-        node_->data = other.node_->data;
+
     }
 
     template<typename DataType>
@@ -199,7 +206,7 @@ namespace linked_lists {
     template<typename DataType>
     template<typename IteratorDataType>
     forward_list<DataType>::ForwardIterator<IteratorDataType>& forward_list<DataType>::ForwardIterator<IteratorDataType>::operator++() noexcept {
-        this->node_ = this->node_->prev;
+        this->node_ = this->node_->next;
         return *this;
     }
 
@@ -236,7 +243,7 @@ namespace linked_lists {
         for (const auto& node : container) {
             Node* new_node = new Node(node, nullptr);
             if (tmp) {
-                tmp->prev = new_node;
+                tmp->next = new_node;
             }
             else {
                 tmp_list.front_ = new_node;
@@ -310,13 +317,10 @@ namespace linked_lists {
 
     template<typename DataType>
     inline typename forward_list<DataType>::Iterator forward_list<DataType>::before_begin() noexcept {
-        if (empty()) {
-            return end();
-        }
-        return Iterator(front_);
+        return Iterator(nullptr, true);
     }
 
-template<typename DataType>
+    template<typename DataType>
     inline typename forward_list<DataType>::Iterator forward_list<DataType>::begin() noexcept {
         if (empty()) {
             return end();
@@ -330,11 +334,13 @@ template<typename DataType>
     }
 
     template<typename DataType>
+    inline forward_list<DataType>::ConstantIterator forward_list<DataType>::before_begin() const noexcept {
+        return ConstantIterator(nullptr, true);
+    }
+
+    template<typename DataType>
     inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::cbefore_begin() const noexcept {
-        if (empty()) {
-            return end();
-        }
-        return ConstantIterator(front_);
+        return before_begin();
     }
 
     template<typename DataType>
@@ -342,7 +348,7 @@ template<typename DataType>
         if (empty()) {
             return end();
         }
-        return ConstantIterator(front_);
+        return ConstantIterator(const_cast<Node*>(front_));
     }
 
     template<typename DataType>
@@ -352,15 +358,12 @@ template<typename DataType>
 
     template<typename DataType>
     inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::cbegin() const noexcept {
-        if (empty()) {
-            return end();
-        }
-        return ConstantIterator(front_);
+        return begin();
     }
 
     template<typename DataType>
     inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::cend() const noexcept {
-        return ConstantIterator(nullptr);
+        return end();
     }
 
     template<typename DataType>
@@ -368,7 +371,7 @@ template<typename DataType>
         NodePtr current{ nullptr };
         while (front_ != nullptr) {
             current = front_;
-            front_ = front_->prev;
+            front_ = front_->next;
             delete current;
         }
         size_ = 0;
@@ -389,11 +392,75 @@ template<typename DataType>
     }
 
     template<typename DataType>
+    inline forward_list<DataType>::Iterator forward_list<DataType>::insert_after(forward_list<DataType>::ConstantIterator pos, DataType&& data) {
+        if (pos == end()) {
+            return end();
+        }
+        Node* new_node{ nullptr };
+        if (pos.is_before_begin_) {
+            new_node = new Node(std::move(data), nullptr);
+            if (front_) {
+                new_node->next = front_;
+            }
+            front_ = new_node;
+        }
+        else {
+            new_node = new Node(std::move(data), pos.node_->next_node);
+            pos.node_->next_node = new_node;
+        }
+        ++size_;
+        return Iterator(new_node);
+    }
+
+    template<typename DataType>
+    inline forward_list<DataType>::Iterator forward_list<DataType>::insert_after(forward_list<DataType>::ConstantIterator pos, const DataType& data) {
+        if (pos == end() && !pos.is_before_begin_) {
+            return end();
+        }
+        Node* new_node{ nullptr };
+        if (pos.is_before_begin_) {
+            new_node = new Node(data, nullptr);
+            if (front_) {
+                new_node->next = front_;
+            }
+            front_ = new_node;
+        }
+        else {
+            new_node = new Node(data, pos.node_->next_node);
+            pos.node_->next_node = new_node;
+        }
+        ++size_;
+        return Iterator(new_node);
+    }
+
+    template<typename DataType>
+    inline forward_list<DataType>::Iterator forward_list<DataType>::erase_after(forward_list<DataType>::ConstantIterator pos) {
+        if (empty() || (pos == end() && !pos.is_before_begin_)) {
+            return end();
+        }        
+        Node* next_node;
+        if (pos.is_before_begin_) {
+            next_node = front_->next;
+            delete front_;
+            front_ = next_node;
+            --size_;
+            return Iterator(front_);
+        }
+        else {
+            next_node = pos.node_->next;
+            pos.node_->next = next_node->next;
+            delete next_node;
+            --size_;
+            return Iterator(pos.node_->next);
+        }
+    }
+
+    template<typename DataType>
     inline void forward_list<DataType>::pop_front() noexcept {
         if (empty()) {
             return;
         }
-        NodePtr front_node = front_->prev;
+        NodePtr front_node = front_->next;
         delete front_;
         front_ = front_node;
         --size_;
