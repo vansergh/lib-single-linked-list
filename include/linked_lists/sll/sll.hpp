@@ -6,11 +6,11 @@
 namespace linked_lists {
 
     ////////////////////////////////////
-    // SLList declaration
+    // forward_list declaration
     //////////////////////////////////  
 
     template <typename DataType>
-    class SLList {
+    class forward_list {
     private:
 
         ////////////////////////////////////
@@ -19,7 +19,7 @@ namespace linked_lists {
 
         class Node {
         private:
-            friend class SLList;
+            friend class forward_list;
 
             Node() = default;
 
@@ -42,7 +42,7 @@ namespace linked_lists {
         class ForwardIterator {
         private:
 
-            friend class SLList;
+            friend class forward_list;
 
             explicit ForwardIterator(NodePtr node);
 
@@ -74,7 +74,7 @@ namespace linked_lists {
         };
 
         ////////////////////////////////////
-        // SLList private fields and members
+        // forward_list private fields and members
         //////////////////////////////////       
 
         size_t size_{ 0 };
@@ -86,17 +86,17 @@ namespace linked_lists {
     public:
 
         ////////////////////////////////////
-        // SLList public fields and members
+        // forward_list public fields and members
         //////////////////////////////////
 
-        SLList();
-        SLList(std::initializer_list<DataType> init_list);
-        SLList(const SLList& other);
-        SLList(SLList&& other);
-        ~SLList();
+        forward_list();
+        forward_list(std::initializer_list<DataType> init_list);
+        forward_list(const forward_list& other);
+        forward_list(forward_list&& other);
+        ~forward_list();
 
-        SLList& operator=(const SLList& other);
-        SLList& operator=(SLList&& other);
+        forward_list& operator=(const forward_list& other);
+        forward_list& operator=(forward_list&& other);
 
         using value_type = DataType;
         using reference = value_type&;
@@ -120,7 +120,7 @@ namespace linked_lists {
         bool empty() const noexcept;
         size_t size() const noexcept;
 
-        void swap(SLList& other) noexcept;
+        void swap(forward_list& other) noexcept;
     };
 
     ////////////////////////////////////
@@ -128,7 +128,7 @@ namespace linked_lists {
     //////////////////////////////////  
 
     template<typename DataType>
-    inline SLList<DataType>::Node::Node(DataType&& in_data, SLList<DataType>::Node* in_prev) :
+    inline forward_list<DataType>::Node::Node(DataType&& in_data, forward_list<DataType>::Node* in_prev) :
         data{ std::move(in_data) },
         prev{ in_prev }
     {
@@ -136,7 +136,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>::Node::Node(const DataType& in_data, SLList<DataType>::Node* in_prev) :
+    inline forward_list<DataType>::Node::Node(const DataType& in_data, forward_list<DataType>::Node* in_prev) :
         data{ DataType(in_data) },
         prev{ in_prev }
     {
@@ -149,7 +149,7 @@ namespace linked_lists {
 
     template<typename DataType>
     template<typename IteratorDataType>
-    SLList<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(SLList<DataType>::NodePtr node) :
+    forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(forward_list<DataType>::NodePtr node) :
         node_{ node }
     {
         // Parametrized constructor
@@ -157,7 +157,7 @@ namespace linked_lists {
 
     template<typename DataType>
     template<typename IteratorDataType>
-    SLList<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator() noexcept :
+    forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator() noexcept :
         node_{ nullptr }
     {
         // Default constructor
@@ -165,7 +165,7 @@ namespace linked_lists {
 
     template<typename DataType>
     template<typename IteratorDataType>
-    SLList<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(const ForwardIterator<DataType>& other) noexcept :
+    forward_list<DataType>::ForwardIterator<IteratorDataType>::ForwardIterator(const ForwardIterator<DataType>& other) noexcept :
         node_{ other.node_ }
     {
         node_->prev = other.node_->prev;
@@ -174,38 +174,38 @@ namespace linked_lists {
 
     template<typename DataType>
     template<typename IteratorDataType>
-    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator==(const ForwardIterator<const DataType>& rhs) const noexcept {
+    bool forward_list<DataType>::ForwardIterator<IteratorDataType>::operator==(const ForwardIterator<const DataType>& rhs) const noexcept {
         return this->node_ == rhs.node_;
     }
 
     template<typename DataType>
     template<typename IteratorDataType>
-    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator!=(const ForwardIterator<const DataType>& rhs) const noexcept {
+    bool forward_list<DataType>::ForwardIterator<IteratorDataType>::operator!=(const ForwardIterator<const DataType>& rhs) const noexcept {
         return this->node_ != rhs.node_;
     }
 
     template<typename DataType>
     template<typename IteratorDataType>
-    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator==(const ForwardIterator<DataType>& rhs) const noexcept {
+    bool forward_list<DataType>::ForwardIterator<IteratorDataType>::operator==(const ForwardIterator<DataType>& rhs) const noexcept {
         return this->node_ == rhs.node_;
     }
 
     template<typename DataType>
     template<typename IteratorDataType>
-    bool SLList<DataType>::ForwardIterator<IteratorDataType>::operator!=(const ForwardIterator<DataType>& rhs) const noexcept {
+    bool forward_list<DataType>::ForwardIterator<IteratorDataType>::operator!=(const ForwardIterator<DataType>& rhs) const noexcept {
         return this->node_ != rhs.node_;
     }
 
     template<typename DataType>
     template<typename IteratorDataType>
-    SLList<DataType>::ForwardIterator<IteratorDataType>& SLList<DataType>::ForwardIterator<IteratorDataType>::operator++() noexcept {
+    forward_list<DataType>::ForwardIterator<IteratorDataType>& forward_list<DataType>::ForwardIterator<IteratorDataType>::operator++() noexcept {
         this->node_ = this->node_->prev;
         return *this;
     }
 
     template<typename DataType>
     template<typename IteratorDataType>
-    SLList<DataType>::ForwardIterator<IteratorDataType> SLList<DataType>::ForwardIterator<IteratorDataType>::operator++(int) noexcept {
+    forward_list<DataType>::ForwardIterator<IteratorDataType> forward_list<DataType>::ForwardIterator<IteratorDataType>::operator++(int) noexcept {
         ForwardIterator<IteratorDataType> old_value(*this);
         ++(*this);
         return old_value;
@@ -213,24 +213,24 @@ namespace linked_lists {
 
     template<typename DataType>
     template<typename IteratorDataType>
-    typename SLList<DataType>::ForwardIterator<IteratorDataType>::value_type SLList<DataType>::ForwardIterator<IteratorDataType>::operator*() const noexcept {
+    typename forward_list<DataType>::ForwardIterator<IteratorDataType>::value_type forward_list<DataType>::ForwardIterator<IteratorDataType>::operator*() const noexcept {
         return node_->data;
     }
 
     template<typename DataType>
     template<typename IteratorDataType>
-    typename SLList<DataType>::ForwardIterator<IteratorDataType>::pointer SLList<DataType>::ForwardIterator<IteratorDataType>::operator->() const noexcept {
+    typename forward_list<DataType>::ForwardIterator<IteratorDataType>::pointer forward_list<DataType>::ForwardIterator<IteratorDataType>::operator->() const noexcept {
         return node_;
     }
 
     ////////////////////////////////////
-    // SLList defenition
+    // forward_list defenition
     //////////////////////////////////  
 
     template <typename DataType>
     template <typename Container>
-    void SLList<DataType>::CopyAndSwap_(const Container& container, std::size_t size) {
-        SLList<DataType> tmp_list;
+    void forward_list<DataType>::CopyAndSwap_(const Container& container, std::size_t size) {
+        forward_list<DataType> tmp_list;
 
         Node* tmp{ nullptr };
         for (const auto& node : container) {
@@ -249,7 +249,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>::SLList() :
+    inline forward_list<DataType>::forward_list() :
         size_{ 0 },
         front_{ nullptr }
     {
@@ -257,7 +257,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>::SLList(std::initializer_list<DataType> init_list) :
+    inline forward_list<DataType>::forward_list(std::initializer_list<DataType> init_list) :
         size_{ 0 },
         front_{ nullptr }
     {
@@ -265,7 +265,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>::SLList(const SLList& other) :
+    inline forward_list<DataType>::forward_list(const forward_list& other) :
         size_{ 0 },
         front_{ nullptr }
     {
@@ -273,7 +273,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>::SLList(SLList&& other) :
+    inline forward_list<DataType>::forward_list(forward_list&& other) :
         size_{ other.size_ },
         front_{ other.front_ }
     {
@@ -282,12 +282,12 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>::~SLList() {
+    inline forward_list<DataType>::~forward_list() {
         clear();
     }
 
     template<typename DataType>
-    inline SLList<DataType>& SLList<DataType>::operator=(const SLList& other) {
+    inline forward_list<DataType>& forward_list<DataType>::operator=(const forward_list& other) {
         if (this == &other) {
             clear();
             size_ = other.size_;
@@ -297,7 +297,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline SLList<DataType>& SLList<DataType>::operator=(SLList&& other) {
+    inline forward_list<DataType>& forward_list<DataType>::operator=(forward_list&& other) {
         if (this != &other) {
             clear();
             front_ = other.front_;
@@ -309,7 +309,7 @@ namespace linked_lists {
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::Iterator SLList<DataType>::before_begin() noexcept {
+    inline typename forward_list<DataType>::Iterator forward_list<DataType>::before_begin() noexcept {
         if (empty()) {
             return end();
         }
@@ -317,7 +317,7 @@ namespace linked_lists {
     }
 
 template<typename DataType>
-    inline typename SLList<DataType>::Iterator SLList<DataType>::begin() noexcept {
+    inline typename forward_list<DataType>::Iterator forward_list<DataType>::begin() noexcept {
         if (empty()) {
             return end();
         }
@@ -325,12 +325,12 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::Iterator SLList<DataType>::end() noexcept {
+    inline typename forward_list<DataType>::Iterator forward_list<DataType>::end() noexcept {
         return Iterator(nullptr);
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::cbefore_begin() const noexcept {
+    inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::cbefore_begin() const noexcept {
         if (empty()) {
             return end();
         }
@@ -338,7 +338,7 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::begin() const noexcept {
+    inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::begin() const noexcept {
         if (empty()) {
             return end();
         }
@@ -346,12 +346,12 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::end() const noexcept {
+    inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::end() const noexcept {
         return ConstantIterator(nullptr);
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::cbegin() const noexcept {
+    inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::cbegin() const noexcept {
         if (empty()) {
             return end();
         }
@@ -359,12 +359,12 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    inline typename SLList<DataType>::ConstantIterator SLList<DataType>::cend() const noexcept {
+    inline typename forward_list<DataType>::ConstantIterator forward_list<DataType>::cend() const noexcept {
         return ConstantIterator(nullptr);
     }
 
     template<typename DataType>
-    inline void SLList<DataType>::clear() noexcept {
+    inline void forward_list<DataType>::clear() noexcept {
         NodePtr current{ nullptr };
         while (front_ != nullptr) {
             current = front_;
@@ -375,19 +375,19 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    inline void SLList<DataType>::push_front(DataType&& data) {
+    inline void forward_list<DataType>::push_front(DataType&& data) {
         front_ = new Node(std::move(data), front_);
         ++size_;
     }
 
     template<typename DataType>
-    inline void SLList<DataType>::push_front(const DataType& data) {
+    inline void forward_list<DataType>::push_front(const DataType& data) {
         front_ = new Node(data, front_);
         ++size_;
     }
 
     template<typename DataType>
-    inline void SLList<DataType>::pop_front() noexcept {
+    inline void forward_list<DataType>::pop_front() noexcept {
         if (empty()) {
             return;
         }
@@ -398,12 +398,12 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    inline bool SLList<DataType>::empty() const noexcept {
+    inline bool forward_list<DataType>::empty() const noexcept {
         return size_ == 0;
     }
 
     template<typename DataType>
-    void SLList<DataType>::swap(SLList& other) noexcept {
+    void forward_list<DataType>::swap(forward_list& other) noexcept {
         Node* tmp_back = other.front_;
         std::size_t tmp_size = other.size_;
         other.front_ = front_;
@@ -413,7 +413,7 @@ template<typename DataType>
     }
 
     template<typename DataType>
-    typename SLList<DataType>::size_t SLList<DataType>::size() const noexcept {
+    typename forward_list<DataType>::size_t forward_list<DataType>::size() const noexcept {
         return size_;
     }
 
