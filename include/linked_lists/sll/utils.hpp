@@ -6,7 +6,7 @@
 namespace linked_lists {
 
     template<typename DataType>
-    std::ostream& operator<<(std::ostream& out, const SLList<DataType>& list) {
+    std::ostream& operator<<(std::ostream& out, const forward_list<DataType>& list) {
 
         if (list.empty()) {
             out << "List is empty";
@@ -24,37 +24,37 @@ namespace linked_lists {
     }
 
     template <typename DataType>
-    void swap(SLList<DataType>& lhs, SLList<DataType>& rhs) noexcept {
+    void swap(forward_list<DataType>& lhs, forward_list<DataType>& rhs) noexcept {
         lhs.swap(rhs);
     }
 
     template <typename DataType>
-    bool operator==(const SLList<DataType>& lhs, const SLList<DataType>& rhs) {
+    bool operator==(const forward_list<DataType>& lhs, const forward_list<DataType>& rhs) {
         return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin());
     }
 
     template <typename DataType>
-    bool operator!=(const SLList<DataType>& lhs, const SLList<DataType>& rhs) {
+    bool operator!=(const forward_list<DataType>& lhs, const forward_list<DataType>& rhs) {
         return !(lhs == rhs);
     }
 
     template <typename DataType>
-    bool operator<(const SLList<DataType>& lhs, const SLList<DataType>& rhs) {
+    bool operator<(const forward_list<DataType>& lhs, const forward_list<DataType>& rhs) {
         return std::lexicographical_compare(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
     }
 
     template <typename DataType>
-    bool operator<=(const SLList<DataType>& lhs, const SLList<DataType>& rhs) {
+    bool operator<=(const forward_list<DataType>& lhs, const forward_list<DataType>& rhs) {
         return (lhs < rhs) || (lhs == rhs);
     }
 
     template <typename DataType>
-    bool operator>(const SLList<DataType>& lhs, const SLList<DataType>& rhs) {
+    bool operator>(const forward_list<DataType>& lhs, const forward_list<DataType>& rhs) {
         return !(lhs < rhs) && (lhs != rhs);
     }
 
     template <typename DataType>
-    bool operator>=(const SLList<DataType>& lhs, const SLList<DataType>& rhs) {
+    bool operator>=(const forward_list<DataType>& lhs, const forward_list<DataType>& rhs) {
         return (lhs > rhs) || (lhs == rhs);
     }
 
